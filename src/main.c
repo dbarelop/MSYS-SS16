@@ -5,10 +5,21 @@
  *  Author: da431lop
  */ 
 
-#include <util/delay.h>
+#include "blue_os.h"
 #include "motor.h"
 
 int main(void)
+{
+	// Configure pin 3 from port F as output and pin 2 as input to use the UART
+	PORTF.DIR = (0x01 << 2);
+	while (1)
+	{
+		blueOsWriteString("Hello world!\n");
+		blueOsDelay(1000);
+	}
+}
+
+int main2(void)
 {
 	int MAX_SPEED = 1000;
 	int i = 0;
@@ -21,7 +32,7 @@ int main(void)
 			speed = 0;
 			step = 50;
 			brake();
-			_delay_ms(2000);
+			blueOsDelay(2000);
 		}
         accelerate(speed);
 		speed += step;
@@ -30,6 +41,6 @@ int main(void)
 			step *= -1;
 		}
 		i = (i + 1) % 1000;
-		_delay_ms(250);
+		blueOsDelay(250);
     }
 }

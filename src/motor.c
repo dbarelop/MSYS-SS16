@@ -7,26 +7,31 @@
 
 #include <avr/io.h>
 
-// TODO: disable motor when using brake and viceversa
-// CTRLB -> CCAEN for motor; CCBEN for brake
-// Configure pin as output (motor bit nr. 4 of register DIR; brake bit nr. 5)
 void accelerate(int speed)
 {
-	speed = speed % 1000;
+	// Disable the brake (CCAEN) and enable the motor (CCBEN)
+	TCD1_CTRLB = TC1_CCBEN_bm;
+	// Configure motor pin (port D, pin 4) as output
+	PORTD.DIR = (0x01 << 3);
 	TCD1_CTRLA = 0x01;					// Prescaler = 1
-	TCD1_CTRLB = TC_WGMODE_SS_gc;		// Timer set in Single-slope PWM operation mode
+	TCD1_CTRLB = TCD1_CTRLB | TC_WGMODE_SS_gc;		// Timer set in Single-slope PWM operation mode
 	TCD1_CTRLC = 0x00;
 	TCD1_CTRLD = 0x00;
 	TCD1_PER = 0xFF;					// Period set to highest possible value
-	TCD1_CCA = TCD1_PER / 1000 * speed;	// Compare value set to val equivalent for selected period
+	// Set the speed
+	TCD1_CCA = TCD1_PER * speed / 1000;	// Compare value set to value equivalent for selected period
 }
 
 void brake()
 {
+	// Disable the motor (CCBEN) and enable the brake (CCAEN)
+	TCD1_CTRLB = TC1_CCAEN_bm;
+	// Configure brake pin (port D, pin 5)
+	PORTD.DIR = (0x01 << 4);
 	TCD1_CTRLA = 0x01;				// Prescaler = 1
-	TCD1_CTRLB = TC_WGMODE_SS_gc;	// Timer set in Single-slope PWM operation mode
+	TCD1_CTRLB = TCD1_CTRLB | TC_WGMODE_SS_gc;	// Timer set in Single-slope PWM operation mode
 	TCD1_CTRLC = 0x00;
 	TCD1_CTRLD = 0x00;
 	TCD1_PER = 0xFF;				// Period set to highest possible value
-	TCD1_CCA = 0xFF;				// Compare value set to selected period
+	TCD1_CCB = 0xFF;				// Compare value set to selected period
 }
