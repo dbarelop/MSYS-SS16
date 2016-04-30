@@ -16,9 +16,11 @@ BLUEOS_SRC_FILES := $(wildcard $(BLUEOS_SOURCE_PATH)/*.c)
 BLUEOS_OBJ_FILES := $(BLUEOS_SRC_FILES:.c=.o)
 
 main.o: main.c
+	mkdir -p $(BUILD_DIR)
 	$(CC) $(CC_FLAGS) $(INC_PARAMS) -c -o $(BUILD_DIR)/$@ $^
 
 motor.o: motor.c
+	mkdir -p $(BUILD_DIR)
 	$(CC) $(CC_FLAGS) $(INC_PARAMS) -c -o $(BUILD_DIR)/$@ $^
 
 main.elf: main.o motor.o $(BLUEOS_OBJ_FILES)
@@ -28,7 +30,10 @@ main.hex: main.elf
 	$(OBJCOPY) -O ihex -R .eeprom -R .fuse -R .lock -R .signature $(BUILD_DIR)/$< $(BUILD_DIR)/$@
 
 $(BLUEOS_SOURCE_PATH)/%.o: $(BLUEOS_SOURCE_PATH)/%.c
+	mkdir -p $(BUILD_DIR)/$(BLUEOS_SOURCE_PATH)
 	$(CC) $(CC_FLAGS) $(INC_PARAMS) -c -o $(BUILD_DIR)/$@ $<
 
 clean:
 	rm -rf $(BUILD_DIR)
+
+all: main.hex
