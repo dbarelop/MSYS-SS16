@@ -46,7 +46,7 @@ void uartPutDecimal( volatile uint8_t value )
 
 void blueOsInitShellVt100()
 {
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		// Select VT100 mode
 		27,
@@ -79,7 +79,7 @@ void blueOsInitShellVt100()
 
 void blueOsClearScreen()
 {
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		27,
 		'[',
@@ -98,7 +98,7 @@ void blueOsSetPosition(uint8_t row, uint8_t col)
 {
 	uint8_t irstate = blueOsEnterCriticalSection();
 
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		27,
 		'[',
@@ -176,7 +176,7 @@ void blueOsDrawVertLine(uint8_t x, uint8_t y, uint8_t length)
  */
 void blueOsEnterGraphic()
 {
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		27,
 		'(',
@@ -189,7 +189,7 @@ void blueOsEnterGraphic()
 }
 void blueOsLeaveGraphic()
 {
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		27,
 		'(',
@@ -207,7 +207,7 @@ void blueOsLeaveGraphic()
  */
 void blueOsSetRollingArea(uint8_t y1, uint8_t y2)
 {
- 	static char buffer[] PROGMEM =
+ 	const static char buffer[] PROGMEM =
 	{
 		27,
 		'[',
@@ -226,7 +226,7 @@ void blueOsSetRollingArea(uint8_t y1, uint8_t y2)
 
 void blueOsSetInvers(uint8_t state)
 {
-	static char buffer[] PROGMEM =
+	const static char buffer[] PROGMEM =
 	{
 		27,
 		'[',

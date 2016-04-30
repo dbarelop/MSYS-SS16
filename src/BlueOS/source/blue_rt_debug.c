@@ -1,3 +1,4 @@
+#ifdef RT_DEBUG
 #include "blue_os.h"
 #include "blue_os_internals.h"
 #include "../../comm.h"
@@ -42,3 +43,4 @@ void send_debugEvent(volatile BlueOsTCB *tcb)
 	//send via debug channel
 	commSendRealtime(&state);
 }
+#endif
