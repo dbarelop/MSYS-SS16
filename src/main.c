@@ -3,11 +3,12 @@
  *
  * Created: 07.04.2016 19:17:38
  *  Author: da431lop
- */ 
+ */
 
-#include "blue_os.h"
-#include "motor.h"
+#include <avr/io.h>
 #include <stdlib.h>
+#include "BlueOS/source/blue_os.h"
+#include "motor.h"
 
 #define STACKSIZE 128
 BlueOsTCB taskTCB;
