@@ -73,6 +73,7 @@ install_manifest.txt
 ## Plugin-specific files:
 
 # IntelliJ
+/.idea
 /target/
 
 # mpeltonen/sbt-idea plugin
