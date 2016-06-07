@@ -4,19 +4,12 @@
  * Created: 07.04.2016 19:17:38
  *  Author: da431lop
  */
-<<<<<<< HEAD
 
 #include <stdlib.h>
 
 #include "blue_os.h"
 #include "constants.h"
 #include "gui.h"
-=======
-
-#include <avr/io.h>
-#include <stdlib.h>
-#include "BlueOS/source/blue_os.h"
->>>>>>> dfb78a42b2b25089532e37648688b7ac44c901c0
 #include "motor.h"
 
 #define TEST_MOTOR
