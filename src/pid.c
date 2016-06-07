@@ -10,11 +10,11 @@ void pid()
 	// TODO: make setpoint extern variable
 	int setpoint = 0;
 	// TODO: implement using fixed point
-	float input, output, err, ierr = 0, derr, prev_err = 0;
+	float output, err, ierr = 0, derr, prev_err = 0;
 	
 	while (1)
 	{
-		err = setpoint - current_speed();
+		err = setpoint - getCurrentSpeed();
 		ierr += err;
 		derr = err - prev_err;
 		output = Kp*err + Ki*ierr + Kd*derr;

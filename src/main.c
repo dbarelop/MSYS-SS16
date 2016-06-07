@@ -5,17 +5,17 @@
  *  Author: da431lop
  */
 
-#include <stdlib.h>
-
 #include "blue_os.h"
 #include "constants.h"
+#ifdef GUI
 #include "gui.h"
-#include "motor.h"
+#endif
+#ifdef TEST_MOTOR
+#include "motor_test.h"
+#endif
+#ifdef PID
 #include "pid.h"
-
-#define TEST_MOTOR
-#define GUI
-#define PID
+#endif
 
 void select32MHzClk()
 {
@@ -43,44 +43,6 @@ void helloWorld()
 }
 #endif
 
-#ifdef TEST_MOTOR
-BlueOsTCB motorTCB;
-uint8_t motorStack[STACKSIZE+1];
-
-void testMotor()
-{
-	char buffer[8];
-	int MAX_SPEED = 1000;
-	int i = 0;
-	int speed = 0, step = 50;
-	while(1)
-	{
-		itoa(speed, buffer, 10);
-		blueOsWriteString(buffer);
-		blueOsWriteString(",");
-		itoa(i, buffer, 10);
-		blueOsWriteString(buffer);
-		blueOsWriteString("\n");
-		// Every 25 seconds, push the brake, wait for 2 seconds and restart speed
-		if (i == 0)
-		{
-			speed = 0;
-			step = 50;
-			brake();
-			blueOsDelay(2000);
-		}
-		accelerate(speed);
-		speed += step;
-		if (speed == 0 || speed == MAX_SPEED)
-		{
-			step *= -1;
-		}
-		i = (i + 1) % 1000;
-		blueOsDelay(1000);
-	}
-}
-#endif
-
 int main()
 {
 	// Configure the microcontroller to run at 32 MHz
@@ -95,7 +57,7 @@ int main()
 	blueOsCreateTask(&helloWorldTCB, helloWorldStack, STACKSIZE, 1, helloWorld, 0);
 	#endif
 	#ifdef TEST_MOTOR
-	blueOsCreateTask(&motorTCB, motorStack, STACKSIZE, 1, testMotor, 0);
+	blueOsCreateTask(&motorTCB, motorStack, STACKSIZE, 1, motorTest, 0);
 	#endif
 	#ifdef GUI
 	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);

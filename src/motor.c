@@ -41,7 +41,7 @@ void brake()
     TCD1_CCB = 0xFF;                // Compare value set to selected period
 }
 
-int current_speed()
+int getCurrentSpeed()
 {
 	// TODO: implement
 	return -1;

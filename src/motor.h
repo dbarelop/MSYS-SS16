@@ -19,4 +19,4 @@ void brake();
 /*
  * Returns the current speed of the car (between 0 and 1000)
  */
-int current_speed();
+int getCurrentSpeed();
