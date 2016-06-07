@@ -25,3 +25,8 @@ void pid()
 		prev_err = err;
 	}
 }
+
+void setTargetSpeed(int targetSpeed)
+{
+	// TODO: implement
+}
