@@ -4,17 +4,24 @@
 #include "constants.h"
 #include "motor.h"
 #include "motor_test.h"
+#include "speedometer.h"
 
 void motorTest()
 {
-	int i = 10;
+	accelerate(10);
+	/*int i = 10, speed;
 	while (1)
 	{
+		blueOsClearScreen();
 		accelerate(i);
+		speed = getCurrentSpeed();
 		i += 10;
-		i = (i % 100);
+		i = (i % 40);
+		blueOsWriteInt(i, 10);
+		blueOsWriteString(", ");
+		blueOsWriteInt(speed, 10);
 		blueOsDelay(1000);
-	}
+	}*/
 }
 
 void motorTest2()

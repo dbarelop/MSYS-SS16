@@ -16,6 +16,9 @@
 #ifdef PID
 #include "pid.h"
 #endif
+#ifdef SPEEDOMETER
+#include "speedometer.h"
+#endif
 
 void select32MHzClk()
 {
@@ -64,6 +67,9 @@ int main()
 	#endif
 	#ifdef PID
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
+	#endif
+	#ifdef SPEEDOMETER
+	blueOsCreateTask(&speedometerTCB, speedometerStack, STACKSIZE, 1, measureSpeed, 0);
 	#endif
 	
     blueOsStart();

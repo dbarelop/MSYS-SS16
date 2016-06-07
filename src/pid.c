@@ -1,7 +1,10 @@
 #include "blue_os.h"
 #include "constants.h"
 #include "motor.h"
+#include "speedometer.h"
 #include "pid.h"
+
+#define SPEEDOMETER
 
 void pid()
 {
