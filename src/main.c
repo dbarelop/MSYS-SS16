@@ -4,15 +4,23 @@
  * Created: 07.04.2016 19:17:38
  *  Author: da431lop
  */
+<<<<<<< HEAD
+
+#include <stdlib.h>
+
+#include "blue_os.h"
+#include "constants.h"
+#include "gui.h"
+=======
 
 #include <avr/io.h>
 #include <stdlib.h>
 #include "BlueOS/source/blue_os.h"
+>>>>>>> dfb78a42b2b25089532e37648688b7ac44c901c0
 #include "motor.h"
 
-#define STACKSIZE 128
-BlueOsTCB taskTCB;
-uint8_t taskStack[STACKSIZE];
+#define TEST_MOTOR
+#define GUI
 
 void select32MHzClk()
 {
@@ -26,6 +34,10 @@ void select32MHzClk()
 	CLK.CTRL = CLK_SCLKSEL0_bm;
 }
 
+#ifdef HELLO_WORLD
+BlueOsTCB helloWorldTCB;
+uint8_t helloWorldStack[STACKSIZE+1];
+
 void helloWorld()
 {
 	while (1)
@@ -34,6 +46,11 @@ void helloWorld()
         blueOsDelay(1000);
     }
 }
+#endif
+
+#ifdef TEST_MOTOR
+BlueOsTCB motorTCB;
+uint8_t motorStack[STACKSIZE+1];
 
 void testMotor()
 {
@@ -67,20 +84,30 @@ void testMotor()
 		blueOsDelay(1000);
 	}
 }
+#endif
 
-void testVT100()
+#ifdef PID
+BlueOsTCB pidTCB;
+uint8_t pidStack[STACKSIZE+1];
+
+void pid()
 {
-	blueOsInitShellVt100();
+	// TODO: find out correct values
+	const int Kp = ??, Ki = ??, Kd = ??;
+	// TODO: implement using fixed point
+	float input, output, err, ierr = 0, prev_err = 0;
+	
 	while (1)
 	{
-		blueOsEnterGraphic();
-		blueOsDrawMainFrame(1, 1, 20, 20);
-		blueOsLeaveGraphic();
-		blueOsSetPosition(10, 10);
-		blueOsWriteString("Welcome");
-		blueOsDelay(250);
+		err = setpoint - input;
+		ierr += err;
+		derr = err - prev_err;
+		output = Kp*err + Ki*ierr + Kd*derr;
+		accelerate(output);
+		prev_err = err;
 	}
 }
+#endif
 
 int main()
 {
@@ -92,7 +119,18 @@ int main()
 	
 	blueOsInit();
 	
-	blueOsCreateTask(&taskTCB, taskStack, STACKSIZE, 1, testVT100, 0);
+	#ifdef HELLO_WORLD
+	blueOsCreateTask(&helloWorldTCB, helloWorldStack, STACKSIZE, 1, helloWorld, 0);
+	#endif
+	#ifdef TEST_MOTOR
+	blueOsCreateTask(&motorTCB, motorStack, STACKSIZE, 1, testMotor, 0);
+	#endif
+	#ifdef GUI
+	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
+	#endif
+	#ifdef PID
+	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
+	#endif
 	
     blueOsStart();
 	

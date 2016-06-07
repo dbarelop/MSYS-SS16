@@ -7,6 +7,9 @@
 
 #include <avr/io.h>
 
+/*
+ * Sets the speed of the motor to a given value between 0 and 1000
+ */
 void accelerate(int speed)
 {
     // Disable the brake (CCAEN) and enable the motor (CCBEN)
