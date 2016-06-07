@@ -11,9 +11,11 @@
 #include "constants.h"
 #include "gui.h"
 #include "motor.h"
+#include "pid.h"
 
 #define TEST_MOTOR
 #define GUI
+#define PID
 
 void select32MHzClk()
 {
@@ -75,29 +77,6 @@ void testMotor()
 		}
 		i = (i + 1) % 1000;
 		blueOsDelay(1000);
-	}
-}
-#endif
-
-#ifdef PID
-BlueOsTCB pidTCB;
-uint8_t pidStack[STACKSIZE+1];
-
-void pid()
-{
-	// TODO: find out correct values
-	const int Kp = ??, Ki = ??, Kd = ??;
-	// TODO: implement using fixed point
-	float input, output, err, ierr = 0, prev_err = 0;
-	
-	while (1)
-	{
-		err = setpoint - input;
-		ierr += err;
-		derr = err - prev_err;
-		output = Kp*err + Ki*ierr + Kd*derr;
-		accelerate(output);
-		prev_err = err;
 	}
 }
 #endif

@@ -40,3 +40,9 @@ void brake()
     TCD1_PER = 0xFF;                // Period set to highest possible value
     TCD1_CCB = 0xFF;                // Compare value set to selected period
 }
+
+int current_speed()
+{
+	// TODO: implement
+	return -1;
+}
