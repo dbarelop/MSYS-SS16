@@ -1,10 +1,11 @@
 #include "blue_os.h"
 #include "constants.h"
 #include "gui.h"
+#include "motor.h"
 #include "speedometer.h"
 
-volatile unsigned int target_speed = 0;
-volatile action_t cursor = ACCELERATE;
+static volatile unsigned int target_speed = 0;
+static volatile action_t cursor = ACCELERATE;
 
 void gui()
 {
@@ -85,15 +86,16 @@ void inputParser()
 					switch (cursor)
 					{
 						case ACCELERATE:
-							target_speed = target_speed < 1000 ? target_speed + 5 : 1000;
+							target_speed = target_speed < 1000 ? target_speed + 10 : 1000;
 							break;
 						case DECELERATE:
-							target_speed = target_speed > 5 ? target_speed - 5 : 0;
+							target_speed = target_speed > 0 ? target_speed - 10 : 0;
 							break;
 						case STOP:
 							target_speed = 0;
 							break;
 					}
+					setTargetSpeed(target_speed);
 					break;
 			}
 		}

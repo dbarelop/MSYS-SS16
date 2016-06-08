@@ -4,29 +4,30 @@
 #include "speedometer.h"
 #include "pid.h"
 
-#define SPEEDOMETER
+// TODO: check values
+#define KP 20000
+#define KI 100000
+#define KD 1500
+
+static volatile unsigned int target_speed = 0;
 
 void pid()
 {
-	// TODO: find out correct values
-	const int Kp = -1, Ki = -1, Kd = -1;
-	// TODO: make setpoint extern variable
-	int setpoint = 0;
 	// TODO: implement using fixed point
 	float output, err, ierr = 0, derr, prev_err = 0;
 	
 	while (1)
 	{
-		err = setpoint - getCurrentSpeed();
+		err = target_speed - getCurrentSpeed();
 		ierr += err;
 		derr = err - prev_err;
-		output = Kp*err + Ki*ierr + Kd*derr;
+		output = KP*err + KI*ierr + KD*derr;
 		accelerate(output);
 		prev_err = err;
 	}
 }
 
-void setTargetSpeed(int targetSpeed)
+void setTargetSpeed(unsigned int new_value)
 {
-	// TODO: implement
+	target_speed = new_value;
 }

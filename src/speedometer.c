@@ -5,8 +5,8 @@
 #include "constants.h"
 #include "speedometer.h"
 
-unsigned int speed;
-volatile unsigned int ticks;
+static unsigned int speed;
+static volatile unsigned int ticks;
 
 ISR(PORTB_INT0_vect)
 {
