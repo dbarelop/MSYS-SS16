@@ -1,67 +1,102 @@
 #include "blue_os.h"
 #include "constants.h"
 #include "gui.h"
+#include "speedometer.h"
 
-void drawFrame();
+volatile unsigned int target_speed = 0;
+volatile action_t cursor = ACCELERATE;
 
-void gui(){
+void gui()
+{
+	unsigned int target_speed_tmp;
+	action_t cursor_tmp;
 	blueOsInitShellVt100();
-	drawFrame(30, 10, 100);
-	
+	blueOsClearScreen();
+	while(1)
+	{
+		// Draw the main frame
+		blueOsEnterGraphic();
+		blueOsDrawMainFrame(3, 1, 80, 24);
+		blueOsDrawHorizLine(4 , 3, 78);
+		blueOsLeaveGraphic();
+		blueOsSetPosition(2, 35);
+		blueOsWriteString("MSYS SS16");
+		// Display the parameters
+		blueOsSetPosition(4, 5);
+		blueOsWriteString("Parameters");
+		// Display the current speed in RPS
+		blueOsSetPosition(6, 5);
+		blueOsWriteString("* Current speed: ");
+		blueOsWriteInt(getCurrentSpeedRPS(), 10);
+		blueOsWriteString(" rps");
+		// Display the target speed in %
+		target_speed_tmp = target_speed;
+		blueOsSetPosition(8, 5);
+		blueOsWriteString("* Target speed:  ");
+		blueOsWriteInt(target_speed_tmp / 10, 3);
+		blueOsShellWriteChar('.');
+		// TODO: the function shortToString writes a blank space ' ' for a positive sign...
+		blueOsWriteInt((target_speed_tmp % 10) * 10, 2);
+		blueOsWriteString(" %");
+		// Display the buttons and highlight the cursor selection
+		cursor_tmp = cursor;
+		blueOsSetPosition(12, 20);
+		blueOsSetInvers(cursor_tmp == ACCELERATE);
+		blueOsWriteString("Accelerate");
+		blueOsSetPosition(12, 40);
+		blueOsSetInvers(cursor_tmp == DECELERATE);
+		blueOsWriteString("Decelerate");
+		blueOsSetPosition(12, 60);
+		blueOsSetInvers(cursor_tmp == STOP);
+		blueOsWriteString("Stop");
+		// Move the VT100 cursor to the bottom
+		blueOsSetPosition(24, 1);
+		
+		blueOsDelay(50);
+	}
 }
 
-void drawFrame(speed, rps, sollwert)
+void inputParser()
 {
-	while(1){
-		/*blueOsEnterGraphic();
-		blueOsDrawMainFrame(3, 1, 80, 24);
-		blueOsLeaveGraphic();
-		blueOsSetPosition(4, 10);
-		blueOsWriteString("Speed:");
-		blueOsSetPosition(10, 10);
-		blueOsWriteString("Welcome");
-		blueOsSetRollingArea(10, 20);
-		blueOsDelay(250);*/
-		
-		blueOsSetPosition(1,1);
-		blueOsClearScreen();
-		blueOsEnterGraphic();
-		//blueOsDrawMainFrame(10,10,10,10); // set gui frame structure
-		blueOsDrawHorizLine(1,1,60);
-		blueOsDrawVertLine(1,2,20);
-		blueOsDrawHorizLine(1,23,60);
-		blueOsDrawVertLine(62,2,20);
-		blueOsDrawHorizLine(2,3,59);
-		blueOsLeaveGraphic();
-		//params(0,0,0); // initialise the parameters
-		blueOsSetPosition(2,23);
-		blueOsWriteString("Gui for BlueRider\r\n");
-		blueOsSetPosition(4, 5);
-		blueOsWriteString("Parameters \r\n");
-		
-		blueOsSetPosition(6, 5);
-		blueOsWriteString("Speed:  ");
-		blueOsWriteInt(speed,0);
-		blueOsWriteString("\r\n");
-		
-		blueOsSetPosition(8, 5);
-		blueOsWriteString("Rps:     ");
-		blueOsWriteInt(rps,0);
-		blueOsWriteString("\r\n");
-		
-		blueOsSetPosition(10, 5);
-		blueOsWriteString("Sollwert:     ");
-		blueOsWriteInt(sollwert,0);
-		blueOsWriteString("\r\n");
-		
-		blueOsSetPosition(14, 20);
-		blueOsWriteString("Button u: Increase RPS by one\r\n");
-		blueOsSetPosition(16, 20);
-		blueOsWriteString("Button d: Decrease RPS by one\r\n");
-		
-		blueOsSetPosition(18, 20);
-		blueOsWriteString("Input: \r\n");
-		blueOsDelay(250);
+	uint8_t buf;
+	while (1)
+	{
+		if (blueOsShellRead(&buf, 1) >= sizeof(uint8_t))
+		{
+			switch (buf)
+			{
+				case '[':
+					if (blueOsShellRead(&buf, 1) >= sizeof(uint8_t))
+					{
+						switch (buf)
+						{
+							case 'C':
+								// Cursor right
+								cursor = cursor < 2 ? cursor + 1 : 2;
+								break;
+							case 'D':
+								// Cursor left
+								cursor = cursor > 0 ? cursor - 1 : 0;
+								break;
+						}
+					}
+					break;
+				case '\r':
+					switch (cursor)
+					{
+						case ACCELERATE:
+							target_speed = target_speed < 1000 ? target_speed + 5 : 1000;
+							break;
+						case DECELERATE:
+							target_speed = target_speed > 5 ? target_speed - 5 : 0;
+							break;
+						case STOP:
+							target_speed = 0;
+							break;
+					}
+					break;
+			}
+		}
+		blueOsDelay(50);
 	}
-	
 }

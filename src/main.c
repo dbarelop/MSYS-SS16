@@ -64,6 +64,7 @@ int main()
 	#endif
 	#ifdef GUI
 	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
+	blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
 	#endif
 	#ifdef PID
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
