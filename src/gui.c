@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "gui.h"
 #include "motor.h"
+#include "pid.h"
 #include "speedometer.h"
 
 static volatile unsigned int target_speed = 0;
@@ -79,6 +80,16 @@ void inputParser()
 								// Cursor left
 								cursor = cursor > 0 ? cursor - 1 : 0;
 								break;
+							case 'A':
+								// Accelerate
+								target_speed = target_speed + 100 < 1000 ? target_speed + 100 : 1000;
+								setTargetSpeed(target_speed);
+								break;
+							case 'B':
+								// Decelerate
+								target_speed = target_speed - 100 < 1000 ? target_speed - 100 : 0;
+								setTargetSpeed(target_speed);
+								break;
 						}
 					}
 					break;
@@ -86,10 +97,10 @@ void inputParser()
 					switch (cursor)
 					{
 						case ACCELERATE:
-							target_speed = target_speed < 1000 ? target_speed + 10 : 1000;
+							target_speed = target_speed + 10 < 1000 ? target_speed + 10 : 1000;
 							break;
 						case DECELERATE:
-							target_speed = target_speed > 0 ? target_speed - 10 : 0;
+							target_speed = target_speed - 10 < 1000 ? target_speed - 10 : 0;
 							break;
 						case STOP:
 							target_speed = 0;
