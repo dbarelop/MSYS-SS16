@@ -5,9 +5,10 @@
 #include "pid.h"
 
 // TODO: check values
-#define KP 20000
-#define KI 100000
-#define KD 1500
+#define Ta 0.25
+#define Kp 9.0
+#define Ki 90.0
+#define Kd 0.025
 
 static volatile unsigned int target_speed = 0;
 
@@ -21,9 +22,13 @@ void pid()
 		err = target_speed - getCurrentSpeed();
 		ierr += err;
 		derr = err - prev_err;
-		output = KP*err + KI*ierr + KD*derr;
-		accelerate(output);
 		prev_err = err;
+
+		output = (Kp * err) + (Ki * Ta * ierr) + (Kd * derr / Ta);
+
+		accelerate(output);
+
+		blueOsDelay(250);
 	}
 }
 
