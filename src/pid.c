@@ -5,7 +5,7 @@
 #include "pid.h"
 
 // TODO: check values
-#define _Ta 0.25
+#define _Ta 0.01
 #define _Kp 9.0
 #define _Ki 90.0
 #define _Kd 0.025
@@ -32,9 +32,9 @@ void pid_pos()
 
 	while (1)
 	{
-		err = target_speed - getCurrentSpeedRPS();
+		err = target_speed * 10 - getCurrentSpeedRPS();
 
-		output_tmp += Q0 * err + Q1 * prev_err + Q2 * prev_err2;
+		output_tmp += (Q0 * err + Q1 * prev_err + Q2 * prev_err2) / 10;
 		output = output_tmp < 0 ? 0 : (output_tmp > MAX_OUTPUT ? MAX_OUTPUT : output_tmp);
 		accelerate(output);
 
@@ -53,11 +53,11 @@ void pid_diff()
 
 	while (1)
 	{
-		err = target_speed - getCurrentSpeedRPS();
+		err = target_speed * 10 - getCurrentSpeedRPS();
 		ierr += err;
 		derr = err - prev_err;
 
-		output_tmp = (Kp * err) + (Ki * Ta * ierr) + (Kd * derr / Ta);
+		output_tmp = ((Kp * err) + (Ki * Ta * ierr) + (Kd * derr / Ta)) / 10;
 		output = output_tmp < 0 ? 0 : (output_tmp > MAX_OUTPUT ? MAX_OUTPUT : output_tmp);
 		accelerate(output);
 
@@ -68,7 +68,7 @@ void pid_diff()
 
 void pid()
 {
-	pid_diff();
+	pid_pos();
 }
 
 void setTargetSpeedRPS(unsigned int new_value)

@@ -10,12 +10,12 @@ static volatile action_t cursor = ACCELERATE;
 
 void gui()
 {
-	unsigned int current_output;
+	unsigned int current_output, current_speed;
 	action_t cursor_tmp;
 	blueOsInitShellVt100();
-	blueOsClearScreen();
 	while(1)
 	{
+		blueOsClearScreen();
 		// Draw the main frame
 		blueOsEnterGraphic();
 		blueOsDrawMainFrame(3, 1, 80, 24);
@@ -27,10 +27,12 @@ void gui()
 		blueOsSetPosition(4, 5);
 		blueOsWriteString("Parameters");
 		// Display the current speed in RPS
-		// TODO: display with decimals?
+		current_speed = getCurrentSpeedRPS();
 		blueOsSetPosition(6, 5);
 		blueOsWriteString("* Current speed:  ");
-		blueOsWriteInt(getCurrentSpeedRPS(), 4);
+		blueOsWriteInt(current_speed / 10, 4);
+		blueOsWriteString(".");
+		blueOsWriteInt(current_speed % 10, 1);
 		blueOsWriteString(" rps");
 		// Display the target speed in RPS
 		blueOsSetPosition(8, 5);
@@ -42,7 +44,7 @@ void gui()
 		blueOsSetPosition(10, 5);
 		blueOsWriteString("* Current output: ");
 		blueOsWriteInt(current_output / 10, 3);
-		blueOsWriteString(",");
+		blueOsWriteString(".");
 		blueOsWriteInt(current_output % 10, 1);
 		blueOsWriteString(" %");
 		// Display the buttons and highlight the cursor selection

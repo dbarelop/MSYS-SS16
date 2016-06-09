@@ -16,7 +16,7 @@ ISR(PORTB_INT0_vect)
 	// Calculate the time needed for 1 revolution (ms)
 	time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1)) (presc ~= 1000)
 	// Calculate speed (rps)
-	speed_rps = 1000 / time_ms;
+	speed_rps = 10000 / time_ms;
 	// Restart the timer
 	TCD0.CTRLFSET = TC_CMD_RESTART_gc;
 	sei();
@@ -33,7 +33,7 @@ void initSpeedometer()
 	PORTB.INT0MASK = (0x01 << 2);		// Activate the INT0 for pin 2
 	PORTB.PIN2CTRL = PORT_ISC0_bm;		// Set the ISC (Input/sense configuration) to RISING
 	// Configure the timer 0 to count the time between interruptions
-	// TODO: measure a reasonable amount of ticks to wait to consider
+	// FIXME: measure a reasonable amount of ticks to wait to consider
 	// the speed = 0 (add timer interrupt and tune TCD0.PER)
 	TCD0.CTRLA = 0x07;					// Prescaler = 1024
 	TCD0.CTRLB = 0x00;
