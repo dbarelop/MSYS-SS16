@@ -10,8 +10,13 @@ static volatile unsigned int ticks = 0;
 
 ISR(PORTB_INT0_vect)
 {
+	unsigned int time_ms;
 	cli();
 	ticks = TCD0.CNT;
+	// Calculate the time needed for 1 revolution (ms)
+	time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1)) (presc ~= 1000)
+	// Calculate speed (rps)
+	speed_rps = 1000 / time_ms;
 	// Restart the timer
 	TCD0.CTRLFSET = TC_CMD_RESTART_gc;
 	sei();
@@ -40,16 +45,16 @@ void initSpeedometer()
 
 void measureSpeed()
 {
-	unsigned int time_ms;
+	//unsigned int time_ms;
 	initSpeedometer();
-	while (1)
+	/*while (1)
 	{
 		// Calculate the time needed for 1 revolution (ms)
-		time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1))
+		time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1)) (presc ~= 1000)
 		// Calculate speed (rps)
 		speed_rps = 1000 / time_ms;
 		blueOsDelay(50);
-	}
+	}*/
 }
 
 int getCurrentSpeedRPS()

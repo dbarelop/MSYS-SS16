@@ -58,7 +58,7 @@ void gui()
 		// Move the VT100 cursor to the bottom
 		blueOsSetPosition(24, 1);
 		
-		blueOsDelay(50);
+		blueOsDelay(30);
 	}
 }
 
@@ -86,7 +86,7 @@ void inputParser()
 								break;
 							case 'A':
 								// Accelerate
-								target_speed = target_speed + 10 < 20 ? target_speed + 10 : 20;
+								target_speed = target_speed + 10 < MAX_SPEED_RPS ? target_speed + 10 : MAX_SPEED_RPS;
 								break;
 							case 'B':
 								// Decelerate
@@ -99,7 +99,7 @@ void inputParser()
 					switch (cursor)
 					{
 						case ACCELERATE:
-							target_speed = target_speed + 1 < 20 ? target_speed + 1 : 20;
+							target_speed = target_speed + 1 < MAX_SPEED_RPS ? target_speed + 1 : MAX_SPEED_RPS;
 							break;
 						case DECELERATE:
 							target_speed = (int) target_speed - 1 > 0 ? target_speed - 1 : 0;

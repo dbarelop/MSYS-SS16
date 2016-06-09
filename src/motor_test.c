@@ -8,7 +8,7 @@
 
 void motorTest()
 {
-	accelerate(100);
+	accelerate(0);
 	/*int i = 10, speed;
 	while (1)
 	{

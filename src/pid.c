@@ -22,18 +22,20 @@ static volatile unsigned int output = 0;
 /*
  * Implementation of the PID position algorithm.
  */
+#define Q0 (Kp + Ki * Ta + Kd / Ta)
+#define Q1 (-Kp - 2 * Kd / Ta)
+#define Q2 (Kd / Ta)
 void pid_pos()
 {
-	const int	q0 = Kp + Ki * Ta + Kd / Ta,
-				q1 = -Kp - 2 * Kd / Ta,
-				q2 = Kd / Ta;
-	int err, prev_err = 0, prev_err2 = 0;
+	// FIXME: very slow!!
+	int output_tmp = 0, err, prev_err = 0, prev_err2 = 0;
 
 	while (1)
 	{
 		err = target_speed - getCurrentSpeedRPS();
 
-		output += q0 * err + q1 * prev_err + q2 * prev_err2;
+		output_tmp += Q0 * err + Q1 * prev_err + Q2 * prev_err2;
+		output = output_tmp < 0 ? 0 : (output_tmp > MAX_OUTPUT ? MAX_OUTPUT : output_tmp);
 		accelerate(output);
 
 		prev_err2 = prev_err;
@@ -47,7 +49,7 @@ void pid_pos()
  */
 void pid_diff()
 {
-	int err, ierr = 0, derr, prev_err = 0;
+	int output_tmp, err, ierr = 0, derr, prev_err = 0;
 
 	while (1)
 	{
@@ -55,7 +57,8 @@ void pid_diff()
 		ierr += err;
 		derr = err - prev_err;
 
-		output = (Kp * err) + (Ki * Ta * ierr) + (Kd * derr / Ta);
+		output_tmp = (Kp * err) + (Ki * Ta * ierr) + (Kd * derr / Ta);
+		output = output_tmp < 0 ? 0 : (output_tmp > MAX_OUTPUT ? MAX_OUTPUT : output_tmp);
 		accelerate(output);
 
 		prev_err = err;
