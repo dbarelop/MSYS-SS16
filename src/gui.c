@@ -27,18 +27,19 @@ void gui()
 		blueOsSetPosition(4, 5);
 		blueOsWriteString("Parameters");
 		// Display the current speed in RPS
+		// TODO: display with decimals?
 		blueOsSetPosition(6, 5);
-		blueOsWriteString("* Current speed: ");
-		blueOsWriteInt(getCurrentSpeedRPS(), 10);
+		blueOsWriteString("* Current speed:  ");
+		blueOsWriteInt(getCurrentSpeedRPS(), 4);
 		blueOsWriteString(" rps");
 		// Display the target speed in RPS
 		blueOsSetPosition(8, 5);
-		blueOsWriteString("* Target speed:  ");
+		blueOsWriteString("* Target speed:   ");
 		blueOsWriteInt(target_speed, 4);
 		blueOsWriteString(" rps");
 		// Display the current output value in %
 		current_output = getOutput();
-		blueOsSetPosition(16, 5);
+		blueOsSetPosition(10, 5);
 		blueOsWriteString("* Current output: ");
 		blueOsWriteInt(current_output / 10, 3);
 		blueOsWriteString(",");
@@ -46,15 +47,24 @@ void gui()
 		blueOsWriteString(" %");
 		// Display the buttons and highlight the cursor selection
 		cursor_tmp = cursor;
-		blueOsSetPosition(12, 20);
+		blueOsSetPosition(14, 20);
 		blueOsSetInvers(cursor_tmp == ACCELERATE);
-		blueOsWriteString("Accelerate");
-		blueOsSetPosition(12, 40);
+		blueOsWriteString("Accelerate 1");
+		blueOsSetPosition(14, 40);
 		blueOsSetInvers(cursor_tmp == DECELERATE);
-		blueOsWriteString("Decelerate");
-		blueOsSetPosition(12, 60);
+		blueOsWriteString("Decelerate 1");
+		blueOsSetPosition(14, 60);
 		blueOsSetInvers(cursor_tmp == STOP);
 		blueOsWriteString("Stop");
+		// Display the help
+		blueOsSetPosition(18, 5);
+		blueOsWriteString("Help:");
+		blueOsSetPosition(20, 5);
+		blueOsWriteString("- Press up to increase the speed by 10 rpm (MAX set to");
+		blueOsWriteInt(MAX_SPEED_RPS, 2);
+		blueOsWriteString(")");
+		blueOsSetPosition(22, 5);
+		blueOsWriteString("- Press down to decrease the speed by 10 rpm");
 		// Move the VT100 cursor to the bottom
 		blueOsSetPosition(24, 1);
 		

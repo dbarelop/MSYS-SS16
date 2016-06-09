@@ -43,20 +43,6 @@ void initSpeedometer()
 	sei();
 }
 
-void measureSpeed()
-{
-	//unsigned int time_ms;
-	initSpeedometer();
-	/*while (1)
-	{
-		// Calculate the time needed for 1 revolution (ms)
-		time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1)) (presc ~= 1000)
-		// Calculate speed (rps)
-		speed_rps = 1000 / time_ms;
-		blueOsDelay(50);
-	}*/
-}
-
 int getCurrentSpeedRPS()
 {
 	return speed_rps;

@@ -1,10 +1,7 @@
-BlueOsTCB speedometerTCB;
-uint8_t speedometerStack[STACKSIZE+1];
-
 /*
- * Starts the speed measuring task.
+ * Programs the speed measuring task.
  */
-void measureSpeed();
+void initSpeedometer();
 
 /*
  * Returns the current speed of the car in RPS.

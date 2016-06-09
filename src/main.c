@@ -7,16 +7,12 @@
 
 #include "blue_os.h"
 #include "constants.h"
-#ifdef GUI
-#include "gui.h"
-#endif
 #ifdef TEST_MOTOR
 #include "motor_test.h"
 #endif
 #ifdef PID
+#include "gui.h"
 #include "pid.h"
-#endif
-#ifdef SPEEDOMETER
 #include "speedometer.h"
 #endif
 
@@ -62,15 +58,11 @@ int main()
 	#ifdef TEST_MOTOR
 	blueOsCreateTask(&motorTCB, motorStack, STACKSIZE, 1, motorTest, 0);
 	#endif
-	#ifdef GUI
+	#ifdef PID
+	initSpeedometer();
 	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
 	blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
-	#endif
-	#ifdef PID
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
-	#endif
-	#ifdef SPEEDOMETER
-	blueOsCreateTask(&speedometerTCB, speedometerStack, STACKSIZE, 1, measureSpeed, 0);
 	#endif
 	
     blueOsStart();
