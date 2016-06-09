@@ -10,7 +10,7 @@ static volatile action_t cursor = ACCELERATE;
 
 void gui()
 {
-	unsigned int target_speed_tmp;
+	unsigned int current_output;
 	action_t cursor_tmp;
 	blueOsInitShellVt100();
 	blueOsClearScreen();
@@ -31,14 +31,18 @@ void gui()
 		blueOsWriteString("* Current speed: ");
 		blueOsWriteInt(getCurrentSpeedRPS(), 10);
 		blueOsWriteString(" rps");
-		// Display the target speed in %
-		target_speed_tmp = target_speed;
+		// Display the target speed in RPS
 		blueOsSetPosition(8, 5);
 		blueOsWriteString("* Target speed:  ");
-		blueOsWriteInt(target_speed_tmp / 10, 3);
-		blueOsShellWriteChar('.');
-		// TODO: the function shortToString writes a blank space ' ' for a positive sign...
-		blueOsWriteInt((target_speed_tmp % 10) * 10, 2);
+		blueOsWriteInt(target_speed, 4);
+		blueOsWriteString(" rps");
+		// Display the current output value in %
+		current_output = getOutput();
+		blueOsSetPosition(16, 5);
+		blueOsWriteString("* Current output: ");
+		blueOsWriteInt(current_output / 10, 3);
+		blueOsWriteString(",");
+		blueOsWriteInt(current_output % 10, 1);
 		blueOsWriteString(" %");
 		// Display the buttons and highlight the cursor selection
 		cursor_tmp = cursor;
@@ -82,13 +86,11 @@ void inputParser()
 								break;
 							case 'A':
 								// Accelerate
-								target_speed = target_speed + 100 < 1000 ? target_speed + 100 : 1000;
-								setTargetSpeed(target_speed);
+								target_speed = target_speed + 10 < 20 ? target_speed + 10 : 20;
 								break;
 							case 'B':
 								// Decelerate
-								target_speed = target_speed - 100 < 1000 ? target_speed - 100 : 0;
-								setTargetSpeed(target_speed);
+								target_speed = (int) target_speed - 10 > 0 ? target_speed - 10 : 0;
 								break;
 						}
 					}
@@ -97,18 +99,19 @@ void inputParser()
 					switch (cursor)
 					{
 						case ACCELERATE:
-							target_speed = target_speed + 10 < 1000 ? target_speed + 10 : 1000;
+							target_speed = target_speed + 1 < 20 ? target_speed + 1 : 20;
 							break;
 						case DECELERATE:
-							target_speed = target_speed - 10 < 1000 ? target_speed - 10 : 0;
+							target_speed = (int) target_speed - 1 > 0 ? target_speed - 1 : 0;
 							break;
 						case STOP:
 							target_speed = 0;
+							brake();
 							break;
 					}
-					setTargetSpeed(target_speed);
 					break;
 			}
+			setTargetSpeedRPS(target_speed);
 		}
 		blueOsDelay(50);
 	}

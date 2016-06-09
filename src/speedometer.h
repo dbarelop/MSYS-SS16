@@ -7,11 +7,6 @@ uint8_t speedometerStack[STACKSIZE+1];
 void measureSpeed();
 
 /*
- * Returns the current speed of the car.
- */
-int getCurrentSpeed();
-
-/*
  * Returns the current speed of the car in RPS.
  */
 int getCurrentSpeedRPS();

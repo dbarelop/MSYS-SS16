@@ -9,4 +9,9 @@ void pid();
 /*
  * Sets the target speed for the PID controller (Sollwert).
  */
-void setTargetSpeed(unsigned int new_value);
+void setTargetSpeedRPS(unsigned int new_value);
+
+/*
+ * Returns the current output value.
+ */
+unsigned int getOutput();

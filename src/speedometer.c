@@ -5,8 +5,8 @@
 #include "constants.h"
 #include "speedometer.h"
 
-static unsigned int speed;
-static volatile unsigned int ticks;
+static unsigned int speed_rps = 0;
+static volatile unsigned int ticks = 0;
 
 ISR(PORTB_INT0_vect)
 {
@@ -21,8 +21,6 @@ void initSpeedometer()
 {
 	// Disable interrupts
 	cli();
-	// Initialize speed
-	speed = 0;
 	// Configure the speedometer pin (port B, pin 2) as input
 	PORTB.DIR = 0x00;
 	// Configure the speedometer pin to interrupt on every rising edge
@@ -42,24 +40,19 @@ void initSpeedometer()
 
 void measureSpeed()
 {
+	unsigned int time_ms;
 	initSpeedometer();
 	while (1)
 	{
-		speed = 2500000 / (CLK_MHZ * ticks);	// 2.5 * 1000000 / (CLK_MHZ * ticks)
-		blueOsClearScreen();
-		blueOsWriteString("Current speed: ");
-		blueOsWriteInt(speed, 10);
-		blueOsWriteString(" rps");
-		blueOsDelay(250);
+		// Calculate the time needed for 1 revolution (ms)
+		time_ms = 4 * (ticks + 1) / CLK_MHZ;	// freq = CLK / (presc * (ticks + 1))
+		// Calculate speed (rps)
+		speed_rps = 1000 / time_ms;
+		blueOsDelay(50);
 	}
-}
-
-int getCurrentSpeed()
-{
-	return ticks;
 }
 
 int getCurrentSpeedRPS()
 {
-	return speed;
+	return speed_rps;
 }
