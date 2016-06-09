@@ -56,6 +56,7 @@ void gui()
 		blueOsSetPosition(14, 60);
 		blueOsSetInvers(cursor_tmp == STOP);
 		blueOsWriteString("Stop");
+		blueOsSetInvers(0);
 		// Display the help
 		blueOsSetPosition(18, 5);
 		blueOsWriteString("Help:");

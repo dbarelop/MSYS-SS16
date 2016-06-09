@@ -33,6 +33,8 @@ void initSpeedometer()
 	PORTB.INT0MASK = (0x01 << 2);		// Activate the INT0 for pin 2
 	PORTB.PIN2CTRL = PORT_ISC0_bm;		// Set the ISC (Input/sense configuration) to RISING
 	// Configure the timer 0 to count the time between interruptions
+	// TODO: measure a reasonable amount of ticks to wait to consider
+	// the speed = 0 (add timer interrupt and tune TCD0.PER)
 	TCD0.CTRLA = 0x07;					// Prescaler = 1024
 	TCD0.CTRLB = 0x00;
 	TCD0.CTRLC = 0x00;
