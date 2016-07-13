@@ -15,7 +15,7 @@ class BlueRiderSpi:
 		self.rxQueue = Queue.Queue(maxsize=0)
 		self.motor = mraa.Spi(0)
 		self.motor.mode(3)
-		self.motor.frequency(8000000)
+		self.motor.frequency(1000000)
 		
 		self.rxEscape = 0
 		self.txEscape = 0
