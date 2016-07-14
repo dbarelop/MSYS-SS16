@@ -1,4 +1,4 @@
-SRC_DIR := ./src
+SRC_DIR := ./xmega
 BUILD_DIR := ./target
 BLUEOS_PATH := $(SRC_DIR)/BlueOS
 BLUEOS_CONFIG_PATH := $(BLUEOS_PATH)/config

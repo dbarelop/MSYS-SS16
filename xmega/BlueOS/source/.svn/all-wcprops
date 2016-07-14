@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source
+END
+blue_os_soft_spi.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_soft_spi.c
+END
+blue_os_debug.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_debug.c
+END
+blue_os_container.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_container.h
+END
+blue_os_soft_spi.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_soft_spi.h
+END
+blue_os_debug.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_debug.h
+END
+blue_os_interrupt.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_interrupt.c
+END
+blue_os_utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_utils.c
+END
+blue_os_synchronization.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_synchronization.c
+END
+blue_os_callBack.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_callBack.h
+END
+blue_os_interrupt.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_interrupt.h
+END
+blue_os_shell_vt100.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_shell_vt100.c
+END
+blue_os_task.c
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_task.c
+END
+blue_os_twi.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_twi.c
+END
+blue_os_internals.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_internals.h
+END
+blue_os_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_utils.h
+END
+blue_os_shell_vt100.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_shell_vt100.h
+END
+blue_os_synchronization.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_synchronization.h
+END
+blue_os_shell.c
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_shell.c
+END
+blue_os_task.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_task.h
+END
+blue_os_twi.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_twi.h
+END
+blue_os_shell.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_shell.h
+END
+blue_os_mem.c
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_mem.c
+END
+blue_os.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os.c
+END
+blue_os_container.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_container.c
+END
+blue_os_mem.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os_mem.h
+END
+blue_os.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/esystutor/!svn/ver/1/tags/V4_done/BlueOS/source/blue_os.h
+END

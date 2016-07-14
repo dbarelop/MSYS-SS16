@@ -12,14 +12,14 @@ set(CMAKE_C_COMPILER /opt/local/bin/avr-gcc)
 
 set(CMAKE_C_FLAGS "-Wall -gdwarf-2 -DF_CPU=${FREQ} -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -mmcu=${DEVICE}")
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--start-group -Wl,-lm -Wl,--end-group -Wl,-L${BLUEOS_SOURCE_PATH} -Wl,--gc-sections -mmcu=${DEVICE}")
-include_directories(src/BlueOS/config src/BlueOS/source)
+include_directories(xmega/BlueOS/config xmega/BlueOS/source)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/target")
 
 #========================================
 
-aux_source_directory(src sources)
-aux_source_directory(src/BlueOS/source blueOSSources)
+aux_source_directory(xmega sources)
+aux_source_directory(xmega/BlueOS/source blueOSSources)
 set(SOURCE_FILES ${sources} ${blueOSSources})
 
 #========================================
