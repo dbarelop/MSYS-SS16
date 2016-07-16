@@ -4,7 +4,7 @@ def print_status(status):
     print("\033[3;3HStatus: %s" % status + 20 * " ")
 
 def print_received(received):
-    print("\033[5;7HReceived: %s" % status + 20 * " ")
+    print("\033[5;7HReceived: %s" % received + 20 * " ")
 
 def print_sending(sending):
     print("\033[6;7HSending: %s" % sending + 20 * " ")

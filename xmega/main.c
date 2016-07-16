@@ -68,7 +68,7 @@ int main()
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
 	#endif
 	#ifdef RENNEN
-	blueOsCreateTask(&rennenTCB, rennenStack, STACKSIZE, 1, edisonSampleCommTask, 0);
+	blueOsCreateTask(&rennenTCB, rennenStack, STACKSIZE, 1, edisonCommGetSpeedTask, 0);
 	#endif
 	
     blueOsStart();

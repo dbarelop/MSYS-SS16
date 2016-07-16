@@ -3,47 +3,66 @@
 #include "edison/edison.h"
 #include "race.h"
 
-/**
- * This task just receives data from the Edison module and sends an incrementing ID back.
- */
-void edisonSampleCommTask()
+uint8_t calc_checksum(uint8_t msg_id, uint8_t pos, uint8_t lane)
 {
-	static uint32_t id = 0;
-	static uint8_t rxBuffer[4];
+	return (msg_id + pos + lane) & 0xFF;
+}
+
+void edisonCommGetSpeedTask()
+{
+	static uint8_t msg_id, speed, pos, lane, checksum;
 	
-	// Initialize SPI communication
 	EdisonInit();
+	
+	// Send start message
+	msg_id = START_MSG; pos = 0; lane = 0; checksum = calc_checksum(msg_id, pos, lane);
+	blueOsQueueEnqueue(&edisonTxQueue, msg_id & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, pos & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, lane & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, checksum & 0xFF);
 	
 	while (1)
 	{
-		uint8_t retvalue, i;
+		while (edisonRxQueue._elementcount < 4);
 		
-		while (edisonRxQueue._elementcount < 4)
-			;
+		// Receive data
+		blueOsQueueDequeue(&edisonRxQueue, &msg_id);
+		blueOsQueueDequeue(&edisonRxQueue, &speed);
+		blueOsQueueDequeue(&edisonRxQueue, &lane);
+		blueOsQueueDequeue(&edisonRxQueue, &checksum);
 		
-		for (i = 0; i < 4; i++)
-		{
-			// Receive data from the Edison module. Note: Queue access is blocking!
-			blueOsQueueDequeue(&edisonRxQueue, &retvalue);
-			rxBuffer[i] = retvalue;
-		}
+		blueOsClearScreen();
 		
 		// Print received data
-		for (i = 0; i < 4; i++)
-		{
-			blueOsWriteInt(rxBuffer[i], 3);
-		}
+		blueOsWriteInt(msg_id, 3);
+		blueOsWriteInt(speed, 3);
+		blueOsWriteInt(lane, 3);
+		blueOsWriteInt(checksum, 3);
+		blueOsShellWriteChar('\n');
+		blueOsShellWriteChar('\r');
+		
 		blueOsShellWriteChar('\n');
 		blueOsShellWriteChar('\r');
 		
 		if (edisonTxQueue._elementcount < (edisonTxQueue._queuesize - 4))
 		{
+			msg_id = POS_MSG; pos = 0; lane = 0; checksum = calc_checksum(msg_id, pos, lane);
+			
+			// Print sent data
+			blueOsWriteInt(msg_id, 3);
+			blueOsWriteInt(pos, 3);
+			blueOsWriteInt(lane, 3);
+			blueOsWriteInt(checksum, 3);
+			blueOsShellWriteChar('\n');
+			blueOsShellWriteChar('\r');
+
 			// Send data to the Edison module. Note: Queue access is blocking!
-			blueOsQueueEnqueue(&edisonTxQueue, (id >> 24) & 0xFF);
-			blueOsQueueEnqueue(&edisonTxQueue, (id >> 16) & 0xFF);
-			blueOsQueueEnqueue(&edisonTxQueue, (id >> 8) & 0xFF);
-			blueOsQueueEnqueue(&edisonTxQueue, (id >> 0) & 0xFF);
-			id++;
+			blueOsQueueEnqueue(&edisonTxQueue, msg_id & 0xFF);
+			blueOsQueueEnqueue(&edisonTxQueue, pos & 0xFF);
+			blueOsQueueEnqueue(&edisonTxQueue, lane & 0xFF);
+			blueOsQueueEnqueue(&edisonTxQueue, checksum & 0xFF);
 		}
+		
+		blueOsDelay(30);
 	}
 }

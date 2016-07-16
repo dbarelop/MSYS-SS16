@@ -73,11 +73,12 @@ def receive():
 		rx_list[i] = blueComm.rxQueue.get()
 
 	print_received("%d:%d:%d:%d" % (rx_list[0], rx_list[1], rx_list[2], rx_list[3]))
-	checksum = (rx_list[0] + rx_list[1] + rx_list[2] + rx_list[3]) & 0xFF
+	checksum = (rx_list[0] + rx_list[1] + rx_list[2]) & 0xFF
 
 	if checksum != rx_list[3]:
 		print_error("Checksum is %d and should be %d (msg: %d:%d:%d:%d)" % (checksum, rx_list[3], rx_list[0], rx_list[1], rx_list[2], rx_list[3]))
 		return (START_MSG, 0)
+	pos = rx_list[1]
 	print_position("%d" % pos)
 
 	return (rx_list[0], pos)
@@ -128,6 +129,6 @@ if __name__ == "__main__":
 	print_position("")
 	print_sollv("")
 	print_soll_lane("")
-	print_cur_time("")
+	print_cur_time()
 	print_error("None so far! ;)")
 	main()
