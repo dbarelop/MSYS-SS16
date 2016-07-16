@@ -5,5 +5,5 @@
 
 //#define HELLO_WORLD
 //#define TEST_MOTOR
-//#define PID
+#define PID
 #define RENNEN

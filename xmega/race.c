@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "edison/edison.h"
 #include "race.h"
+#include "pid.h"
 
 uint8_t calc_checksum(uint8_t msg_id, uint8_t pos, uint8_t lane)
 {
@@ -10,7 +11,7 @@ uint8_t calc_checksum(uint8_t msg_id, uint8_t pos, uint8_t lane)
 
 void edisonCommGetSpeedTask()
 {
-	static uint8_t msg_id, speed, pos, lane, checksum;
+	static uint8_t msg_id, speed = 0, pos = 0, lane, checksum;
 	
 	EdisonInit();
 	
@@ -31,6 +32,10 @@ void edisonCommGetSpeedTask()
 		blueOsQueueDequeue(&edisonRxQueue, &lane);
 		blueOsQueueDequeue(&edisonRxQueue, &checksum);
 		
+		// FIXME: checksum
+		
+		setTargetSpeedRPS(speed);
+		
 		blueOsClearScreen();
 		
 		// Print received data
@@ -46,7 +51,7 @@ void edisonCommGetSpeedTask()
 		
 		if (edisonTxQueue._elementcount < (edisonTxQueue._queuesize - 4))
 		{
-			msg_id = POS_MSG; pos = 0; lane = 0; checksum = calc_checksum(msg_id, pos, lane);
+			msg_id = POS_MSG; pos += 10; checksum = calc_checksum(msg_id, pos, lane);
 			
 			// Print sent data
 			blueOsWriteInt(msg_id, 3);

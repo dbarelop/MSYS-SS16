@@ -12,7 +12,7 @@ POS_MSG = 1
 START_MSG = 2
 
 # Sending message types
-SOLL_V_LANE_MSG = 1
+SPEED_LANE_MSG = 1
 
 default_speed = 20
 route_info = dict()
@@ -43,21 +43,21 @@ route_info[1410] = (100, 2)		# Sector 14
 
 blueComm = BlueRiderSpi()
 
-def send(msg_id, sollv, soll_lane = 0xFF):
+def send(msg_id, speed, lane = 0xFF):
 	if blueComm.txQueue.full():
-		print_error("Can not send %d:%d:%d because the queue is full!" % (msg_id, sollv, soll_lane))
+		print_error("Can not send %d:%d:%d because the queue is full!" % (msg_id, speed, lane))
 		return
 
-	soll_lane |= 0x80
+	lane |= 0x80
 
-	checksum = (msg_id + sollv + soll_lane) & 0xFF
-	print_sending("%d:%d:%d:%d" % (msg_id, sollv, soll_lane, checksum))
-	print_sollv("%d" % sollv)
-	print_soll_lane("%d" % soll_lane)
+	checksum = (msg_id + speed + lane) & 0xFF
+	print_sending("%d:%d:%d:%d" % (msg_id, speed, lane, checksum))
+	print_sollv("%d" % speed)
+	print_soll_lane("%d" % lane)
 
 	blueComm.txQueue.put(msg_id & 0xFF)
-	blueComm.txQueue.put(sollv & 0xFF)
-	blueComm.txQueue.put(soll_lane & 0xFF)
+	blueComm.txQueue.put(speed & 0xFF)
+	blueComm.txQueue.put(lane & 0xFF)
 	blueComm.txQueue.put(checksum & 0xFF)
 
 def receive():
@@ -83,7 +83,7 @@ def receive():
 
 	return (rx_list[0], pos)
 
-def get_sollv_and_soll_lane(pos):
+def get_speed_and_lane(pos):
 	needed_key = -1
 	for key in route_info:
 		if key <= pos and needed_key < key:
@@ -96,7 +96,7 @@ def main():
 	while not blueComm.rxQueue.empty():
 		blueComm.rxQueue.get()
 
-	print_status("Ready to handle messages...")
+	print_status("Ready")
 
 	while 1:
 		print_cur_time()
@@ -107,16 +107,16 @@ def main():
 		msg_id, position = rec
 
 		if msg_id == POS_MSG:
-			sollv, soll_lane = get_sollv_and_soll_lane(position)
-			send(SOLL_V_LANE_MSG, sollv, soll_lane)
+			speed, lane = get_speed_and_lane(position)
+			send(SPEED_LANE_MSG, speed, lane)
 		elif msg_id == START_MSG:
-			send(SOLL_V_LANE_MSG, default_speed)
+			send(SPEED_LANE_MSG, default_speed)
 		else:
 			print_error("Received message with invalid id: %d!" % msg_id)
 
 def sigint_handler(signum, frame):
 	for _ in range(4):
-		send(SOLL_V_LANE_MSG, 0)
+		send(SPEED_LANE_MSG, 0)
 
 	shutdown()
 	exit()
@@ -130,5 +130,5 @@ if __name__ == "__main__":
 	print_sollv("")
 	print_soll_lane("")
 	print_cur_time()
-	print_error("None so far! ;)")
+	print_error("No errors")
 	main()

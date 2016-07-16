@@ -68,7 +68,7 @@ void pid_diff()
 
 void pid()
 {
-	pid_pos();
+	pid_diff();
 }
 
 void setTargetSpeedRPS(unsigned int new_value)
