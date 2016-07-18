@@ -68,7 +68,7 @@ int main()
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
 	#endif
 	#ifdef RENNEN
-	blueOsCreateTask(&positionSensorTCB, positionSensorTCB, STACKSIZE, 1, xmega3GetPositionTask, 0);
+	blueOsCreateTask(&positionSensorTCB, positionSensorStack, STACKSIZE, 1, xmega3GetPositionTask, 0);
 	blueOsCreateTask(&edisonCommTCB, edisonCommStack, STACKSIZE, 1, edisonGetSpeedTask, 0);
 	#endif
 	

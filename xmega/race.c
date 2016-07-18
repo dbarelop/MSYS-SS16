@@ -1,4 +1,5 @@
 #include "BlueOS/source/blue_os.h"
+#include "BlueOS/source/blue_os_synchronization.h"
 #include "constants.h"
 #include "edison/edison.h"
 #include "ir-comm/comm.h"
@@ -9,9 +10,9 @@ static BlueOsSema mutex;
 static uint8_t target_lane, target_speed;
 static volatile uint8_t current_lane, current_position;
 
-uint8_t calc_checksum(uint8_t msg_id, uint8_t pos, uint8_t lane)
+uint8_t calc_checksum(uint8_t a, uint8_t b, uint8_t c)
 {
-	return (msg_id + pos + lane) & 0xFF;
+	return (a + b + c) & 0xFF;
 }
 
 void xmega3GetPositionTask()
@@ -40,16 +41,18 @@ void edisonGetSpeedTask()
 {
 	uint8_t rx_msg_id, rx_checksum;
 	uint8_t tx_msg_id, tx_checksum;
+	uint8_t lane, pos;
 	uint8_t valid;
 	
 	EdisonInit();
 	
 	// Send start message
-	tx_msg_id = START_MSG; tx_checksum = calc_checksum(msg_id, position, lane);
-	blueOsQueueEnqueue(&edisonTxQueue, msg_id & 0xFF);
-	blueOsQueueEnqueue(&edisonTxQueue, position & 0xFF);
-	blueOsQueueEnqueue(&edisonTxQueue, lane & 0xFF);
-	blueOsQueueEnqueue(&edisonTxQueue, checksum & 0xFF);
+	tx_msg_id = START_MSG;
+	tx_checksum = calc_checksum(tx_msg_id, 0, 0);
+	blueOsQueueEnqueue(&edisonTxQueue, tx_msg_id & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, 0 & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, 0 & 0xFF);
+	blueOsQueueEnqueue(&edisonTxQueue, tx_checksum & 0xFF);
 	
 	while (1)
 	{
@@ -61,7 +64,7 @@ void edisonGetSpeedTask()
 		blueOsQueueDequeue(&edisonRxQueue, &target_lane);
 		blueOsQueueDequeue(&edisonRxQueue, &rx_checksum);
 
-		valid = check_checksum(rx_msg_id, target_speed, target_lane, rx_checksum);
+		valid = calc_checksum(rx_msg_id, target_speed, target_lane) == rx_checksum;
 
 		if (valid)
 			setTargetSpeedRPS(target_speed);
@@ -74,7 +77,7 @@ void edisonGetSpeedTask()
 		blueOsWriteInt(target_lane, 3);
 		blueOsWriteInt(rx_checksum, 3);
 		if (!valid)
-			blueOsShellWriteString(" invalid checksum!");
+			blueOsWriteString(" invalid checksum!");
 		blueOsShellWriteChar('\n');
 		blueOsShellWriteChar('\r');
 		
@@ -86,8 +89,8 @@ void edisonGetSpeedTask()
 		if (edisonTxQueue._elementcount < (edisonTxQueue._queuesize - 4))
 		{
 			blueOsAcquireSema(&mutex);
-			uint8_t lane = current_lane;
-			uint8_t pos = current_position;
+			lane = current_lane;
+			pos = current_position;
 			blueOsReleaseSema(&mutex);
 
 			tx_msg_id = POS_MSG;

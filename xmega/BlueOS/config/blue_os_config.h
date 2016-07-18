@@ -157,7 +157,7 @@
 /**
  * If BLUE_OS_USE_SEMA is defined, semaphores will be enabled
  */
-//#define BLUE_OS_USE_SEMA
+#define BLUE_OS_USE_SEMA
 
 /**
  * If BLUE_OS_USE_EVENT is defined, the event-interface will be enabled
