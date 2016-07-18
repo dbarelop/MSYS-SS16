@@ -19,6 +19,7 @@ void xmega3GetPositionTask()
 {
 	uint16_t eventData;
 	uint8_t rxBuffer[4];
+	uint8_t target_lane_tmp;
 
 	commInit();
 	commShareVariable(0, rxBuffer);
@@ -31,7 +32,15 @@ void xmega3GetPositionTask()
 		blueOsAcquireSema(&mutex);
 		current_lane = rxBuffer[0];
 		current_position = rxBuffer[1];
+		target_lane_tmp = target_lane;
 		blueOsReleaseSema(&mutex);
+
+		/*if (current_lane >= 0 && current_lane <= 2 && current_lane != target_lane_tmp)
+		{
+			// TODO: turn off diode (implement)
+			blueOsWriteString("Lane switch diode ON...\n\r");
+			laneSwitchDiodeSet(LANESWITCH_DIODE_ON);
+		}*/
 
 		blueOsDelay(30);
 	}
@@ -103,8 +112,6 @@ void edisonGetSpeedTask()
 		blueOsClearScreen();
 		
 		print_received_data(rx_msg_id, target_speed, target_lane, rx_checksum);
-		
-		// TODO: decide whether to do a lane switch!
 		
 		if (edisonTxQueue._elementcount < (edisonTxQueue._queuesize - 4))
 		{
