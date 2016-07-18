@@ -63,12 +63,13 @@ int main()
 	#endif
 	#ifdef PID
 	initSpeedometer();
-	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
-	blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
+	//blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
+	//blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
 	#endif
 	#ifdef RENNEN
-	//blueOsCreateTask(&rennenTCB, rennenStack, STACKSIZE, 1, edisonCommGetSpeedTask, 0);
+	blueOsCreateTask(&positionSensorTCB, positionSensorTCB, STACKSIZE, 1, xmega3GetPositionTask, 0);
+	blueOsCreateTask(&edisonCommTCB, edisonCommStack, STACKSIZE, 1, edisonGetSpeedTask, 0);
 	#endif
 	
     blueOsStart();
