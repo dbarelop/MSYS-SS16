@@ -15,7 +15,7 @@
 #include "pid.h"
 #include "speedometer.h"
 #endif
-#ifdef RENNEN
+#ifdef RACE
 #include "race.h"
 #endif
 
@@ -63,11 +63,13 @@ int main()
 	#endif
 	#ifdef PID
 	initSpeedometer();
-	//blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
-	//blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
+	#ifndef RACE
+	blueOsCreateTask(&GUITCB, GUIStack, STACKSIZE, 1, gui, 0);
+	blueOsCreateTask(&inputParserTCB, inputParserStack, STACKSIZE, 1, inputParser, 0);
+	#endif
 	blueOsCreateTask(&pidTCB, pidStack, STACKSIZE, 1, pid, 0);
 	#endif
-	#ifdef RENNEN
+	#ifdef RACE
 	blueOsCreateTask(&positionSensorTCB, positionSensorStack, STACKSIZE, 1, xmega3GetPositionTask, 0);
 	blueOsCreateTask(&edisonCommTCB, edisonCommStack, STACKSIZE, 1, edisonGetSpeedTask, 0);
 	#endif

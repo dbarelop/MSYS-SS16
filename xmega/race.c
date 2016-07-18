@@ -37,6 +37,37 @@ void xmega3GetPositionTask()
 	}
 }
 
+// TODO: move to GUI!
+
+void print_received_data(uint8_t rx_msg_id, uint8_t target_speed, uint8_t target_lane, uint8_t rx_checksum)
+{
+	uint8_t valid = calc_checksum(rx_msg_id, target_speed, target_lane) == rx_checksum;
+	blueOsWriteString("rx_msg_id = ");
+	blueOsWriteInt(rx_msg_id, 3);
+	blueOsWriteString("\n\rtarget_speed = ");
+	blueOsWriteInt(target_speed, 3);
+	blueOsWriteString("\n\rtarget_lane = ");
+	blueOsWriteInt(target_lane, 3);
+	blueOsWriteString("\n\rchecksum = ");
+	blueOsWriteInt(rx_checksum, 3);
+	if (!valid)
+		blueOsWriteString(" (invalid checksum!)");
+	blueOsWriteString("\n\r\n\r");
+}
+
+void print_sent_data(uint8_t tx_msg_id, uint8_t pos, uint8_t lane, uint8_t tx_checksum)
+{
+	blueOsWriteString("tx_msg_id = ");
+	blueOsWriteInt(tx_msg_id, 3);
+	blueOsWriteString("\n\rcurrent_position = ");
+	blueOsWriteInt(pos, 3);
+	blueOsWriteString("\n\rcurrent_lane = ");
+	blueOsWriteInt(lane, 3);
+	blueOsWriteString("\n\rchecksum = ");
+	blueOsWriteInt(tx_checksum, 3);
+	blueOsWriteString("\n\r\n\r");
+}
+
 void edisonGetSpeedTask()
 {
 	uint8_t rx_msg_id, rx_checksum;
@@ -71,19 +102,8 @@ void edisonGetSpeedTask()
 
 		blueOsClearScreen();
 		
-		// Print received data
-		blueOsWriteInt(rx_msg_id, 3);
-		blueOsWriteInt(target_speed, 3);
-		blueOsWriteInt(target_lane, 3);
-		blueOsWriteInt(rx_checksum, 3);
-		if (!valid)
-			blueOsWriteString(" invalid checksum!");
-		blueOsShellWriteChar('\n');
-		blueOsShellWriteChar('\r');
+		print_received_data(rx_msg_id, target_speed, target_lane, rx_checksum);
 		
-		blueOsShellWriteChar('\n');
-		blueOsShellWriteChar('\r');
-
 		// TODO: decide whether to do a lane switch!
 		
 		if (edisonTxQueue._elementcount < (edisonTxQueue._queuesize - 4))
@@ -96,13 +116,7 @@ void edisonGetSpeedTask()
 			tx_msg_id = POS_MSG;
 			tx_checksum = calc_checksum(tx_msg_id, pos, lane);
 			
-			// Print sent data
-			blueOsWriteInt(tx_msg_id, 3);
-			blueOsWriteInt(pos, 3);
-			blueOsWriteInt(lane, 3);
-			blueOsWriteInt(tx_checksum, 3);
-			blueOsShellWriteChar('\n');
-			blueOsShellWriteChar('\r');
+			print_sent_data(tx_msg_id, pos, lane, tx_checksum);
 
 			// Send data to the Edison module. Note: Queue access is blocking!
 			blueOsQueueEnqueue(&edisonTxQueue, tx_msg_id & 0xFF);
